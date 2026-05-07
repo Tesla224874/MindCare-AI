@@ -1,26 +1,30 @@
 {
-  "name": "frontend",
+  "name": "mindcare-ai",
   "version": "0.1.0",
   "private": true,
+  "description": "MindCare.AI production workspace",
+  "workspaces": [
+    "apps/web",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "next": "16.2.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.4",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "shared:build": "npm --prefix packages/shared run build",
+    "analysis:build": "npm --prefix packages/analysis run build",
+    "packages:build": "npm run shared:build && npm run analysis:build",
+    "web:dev": "npm --prefix apps/web run dev",
+    "web:build": "npm run packages:build && npm --prefix apps/web run build",
+    "web:start": "npm --prefix apps/web run start",
+    "test": "npm run packages:build && npm --prefix apps/web test",
+    "lint": "npm --prefix apps/web run lint",
+    "typecheck": "npm run packages:build && npm --prefix apps/web run typecheck",
+    "prod:check": "npm --prefix apps/web run prod:check",
+    "db:init": "npm --prefix apps/web run db:init",
+    "db:generate": "npm --prefix apps/web run db:generate",
+    "db:push": "npm --prefix apps/web run db:push",
+    "db:deploy": "npm --prefix apps/web run db:deploy",
+    "db:status": "npm --prefix apps/web run db:status",
+    "db:seed": "npm --prefix apps/web run db:seed",
+    "db:setup": "npm --prefix apps/web run db:setup",
+    "db:studio": "npm --prefix apps/web run db:studio"
   }
 }

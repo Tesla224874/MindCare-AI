@@ -1,0 +1,12 @@
+{
+  "name": "@mindcare/database",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MindCare.AI database schema, migrations, and bootstrap SQL",
+  "dependencies": {
+    "@prisma/client": "^7.8.0"
+  },
+  "devDependencies": {
+    "prisma": "^7.8.0"
+  }
+}

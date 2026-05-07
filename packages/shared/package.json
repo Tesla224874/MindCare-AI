@@ -1,0 +1,35 @@
+{
+  "name": "@mindcare/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "MindCare.AI shared types, constants, and validation utilities",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./auth": {
+      "import": "./dist/auth.js",
+      "types": "./dist/auth.d.ts"
+    },
+    "./roles": {
+      "import": "./dist/roles.js",
+      "types": "./dist/roles.d.ts"
+    },
+    "./analysis": {
+      "import": "./dist/analysis.js",
+      "types": "./dist/analysis.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "@prisma/client": "^7.8.0",
+    "typescript": "^5"
+  }
+}
