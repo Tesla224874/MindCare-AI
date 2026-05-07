@@ -54,5 +54,8 @@
   },
   "prisma": {
     "schema": "../../packages/database/prisma/schema.prisma"
+  },
+  "optionalDependencies": {
+    "lightningcss-linux-x64-gnu": "^1.32.0"
   }
 }

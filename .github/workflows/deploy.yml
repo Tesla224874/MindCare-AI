@@ -40,7 +40,7 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --include=optional
 
       - name: Build packages
         run: npm run packages:build
@@ -82,7 +82,7 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --include=optional
 
       - name: Run database migrations
         run: npm run db:deploy
