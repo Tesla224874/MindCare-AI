@@ -3,7 +3,6 @@
   "devCommand": "npm run web:dev",
   "installCommand": "npm ci --include=optional",
   "framework": "nextjs",
-  "nodeVersion": "20.x",
   "outputDirectory": "apps/web/.next",
   "git": {
     "deploymentEnabled": {

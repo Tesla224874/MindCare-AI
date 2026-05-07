@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "MindCare.AI production workspace",
+  "engines": {
+    "node": "20.x"
+  },
   "workspaces": [
     "apps/web",
     "packages/*"
