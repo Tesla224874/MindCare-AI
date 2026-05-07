@@ -3,6 +3,7 @@ import { AlertCircle, Bell, CheckCircle2, Clock, XCircle } from "lucide-react";
 import { AlertStatusManager } from "@/components/ui/alert-status-manager";
 import { requireRoles } from "@/lib/authorization";
 import { getAlertsOverview } from "@/lib/data/alerts";
+import { openCaseFromAlertAction } from "../cases/actions";
 import { updateAlertStatusAction } from "./actions";
 
 function getScope(user: Awaited<ReturnType<typeof requireRoles>>) {
@@ -35,6 +36,7 @@ export default async function AlertsPage() {
   const scope = getScope(currentUser);
   const overview = await getAlertsOverview(scope);
   const canManageAlerts = currentUser.role === "ADMIN" || currentUser.role === "WELLBEING";
+  const canFilterAlerts = canManageAlerts;
 
   const metrics = [
     {
@@ -107,7 +109,9 @@ export default async function AlertsPage() {
 
       <AlertStatusManager
         action={updateAlertStatusAction}
+        openCaseAction={openCaseFromAlertAction}
         canManage={canManageAlerts}
+        canFilter={canFilterAlerts}
         alerts={overview.alerts.map((alert) => ({
           id: alert.id,
           title: alert.title,
@@ -118,6 +122,8 @@ export default async function AlertsPage() {
           teamName: alert.team?.name ?? null,
           openedByName: alert.openedBy?.name ?? null,
           createdAt: formatDate(alert.createdAt),
+          caseId: alert.case?.id ?? null,
+          caseStatus: alert.case?.status ?? null,
         }))}
       />
     </div>

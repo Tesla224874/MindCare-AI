@@ -5,8 +5,22 @@ import { AlertTriangle, CheckCircle2, Database, MessageSquareText, ShieldCheck }
 import { analyzeMessage } from "@/lib/analysis";
 import type { SaveAnalysisState } from "@/app/(dashboard)/dashboard/messages/actions";
 
-const sampleMessage =
-  "Estoy agotado, siento demasiada presion y no duermo bien. No quiero molestar al equipo, pero no puedo mas.";
+const samples = [
+  {
+    label: "Sobrecarga",
+    text: "Estoy agotado, siento demasiada presion y no duermo bien. No quiero molestar al equipo, pero no puedo mas.",
+  },
+  {
+    label: "Neutral",
+    text: "Gracias por el apoyo de esta semana. El bloqueo ya quedo resuelto y el equipo va bien.",
+  },
+  {
+    label: "Escalada",
+    text: "No vale la pena, me rindo, no quiero seguir, no puedo mas y me siento solo.",
+  },
+];
+
+const initialMessage = samples[0].text;
 
 const levelStyles = {
   Bajo: "border-teal-200 bg-teal-50 text-teal-800",
@@ -24,10 +38,28 @@ const initialSaveState: SaveAnalysisState = {
   message: "",
 };
 
+function getScoreExplanation(score: number) {
+  if (score >= 70) {
+    return "Escalada inmediata: varias senales de riesgo aparecen juntas.";
+  }
+
+  if (score >= 45) {
+    return "Atencion preventiva: conviene activar seguimiento humano cuidadoso.";
+  }
+
+  if (score >= 20) {
+    return "Observacion: hay indicios leves que ameritan contexto adicional.";
+  }
+
+  return "Bajo: no hay senales preventivas fuertes en este texto.";
+}
+
 export function MessageAnalyzer({ saveAction }: MessageAnalyzerProps) {
-  const [message, setMessage] = useState(sampleMessage);
+  const [message, setMessage] = useState(initialMessage);
   const [saveState, formAction, isPending] = useActionState(saveAction, initialSaveState);
   const analysis = useMemo(() => analyzeMessage(message), [message]);
+  const trimmedMessage = message.trim();
+  const canSave = trimmedMessage.length >= 12;
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
@@ -54,23 +86,30 @@ export function MessageAnalyzer({ saveAction }: MessageAnalyzerProps) {
             onChange={(event) => setMessage(event.target.value)}
             placeholder="Escribe aqui un mensaje de ejemplo..."
           />
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <span>{message.length} caracteres</span>
+            <span>El guardado se habilita con al menos 12 caracteres.</span>
+          </div>
 
           <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="submit"
               className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={isPending}
+              disabled={isPending || !canSave}
             >
               <Database className="h-4 w-4" aria-hidden="true" />
               {isPending ? "Guardando..." : "Guardar analisis"}
             </button>
-            <button
-              type="button"
-              className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-              onClick={() => setMessage(sampleMessage)}
-            >
-              Cargar ejemplo
-            </button>
+            {samples.map((sample) => (
+              <button
+                key={sample.label}
+                type="button"
+                className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                onClick={() => setMessage(sample.text)}
+              >
+                {sample.label}
+              </button>
+            ))}
             <button
               type="button"
               className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
@@ -113,10 +152,30 @@ export function MessageAnalyzer({ saveAction }: MessageAnalyzerProps) {
               <span>{analysis.score}/100</span>
             </div>
             <div className="h-2 rounded-full bg-white/70">
-              <div className="h-2 rounded-full bg-current" style={{ width: `${analysis.score}%` }} />
+              <div
+                className="h-2 rounded-full bg-current transition-all"
+                style={{ width: `${analysis.score}%` }}
+                aria-hidden="true"
+              />
             </div>
+            <p className="mt-2 text-xs opacity-80">{getScoreExplanation(analysis.score)}</p>
           </div>
-          <p className="mt-4 text-sm opacity-80">Confianza de lectura: {analysis.confidence}%</p>
+          <div className="mt-4">
+            <div className="mb-2 flex items-center justify-between text-sm">
+              <span>Confianza de lectura</span>
+              <span>{analysis.confidence}%</span>
+            </div>
+            <div className="h-2 rounded-full bg-white/70">
+              <div
+                className="h-2 rounded-full bg-current opacity-70 transition-all"
+                style={{ width: `${analysis.confidence}%` }}
+                aria-hidden="true"
+              />
+            </div>
+            <p className="mt-2 text-xs opacity-80">
+              La confianza sube cuando el texto tiene mas contexto y coincidencias explicables.
+            </p>
+          </div>
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-5">

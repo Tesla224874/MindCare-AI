@@ -33,6 +33,12 @@ export async function getAlertsOverview(scope: AlertsScope) {
             email: true,
           },
         },
+        case: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
       },
     }),
     prisma.preventiveAlert.groupBy({

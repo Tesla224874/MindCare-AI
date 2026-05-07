@@ -16,6 +16,10 @@ export const routePermissions = [
     roles: ["ADMIN", "WELLBEING", "AUDITOR"] satisfies AppRole[],
   },
   {
+    href: "/dashboard/cases",
+    roles: ["ADMIN", "WELLBEING", "AUDITOR"] satisfies AppRole[],
+  },
+  {
     href: "/dashboard/messages",
     roles: ["ADMIN", "WELLBEING"] satisfies AppRole[],
   },

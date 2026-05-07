@@ -11,6 +11,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { TeamCreateForm } from "@/components/ui/team-create-form";
+import { OrganizationMembersTable } from "@/components/ui/organization-members-table";
 import { UserCreateForm } from "@/components/ui/user-create-form";
 import { requireRoles } from "@/lib/authorization";
 import { getOrganizationOverview } from "@/lib/data/organization";
@@ -215,8 +216,15 @@ export default async function OrganizationPage() {
                       {team.description ?? "Equipo sincronizado desde la base de datos."}
                     </p>
                     <div className="mt-3 h-2 rounded-full bg-slate-100">
-                      <div className="h-2 rounded-full bg-blue-500" style={{ width: `${wellbeing}%` }} />
+                      <div
+                        className="h-2 rounded-full bg-blue-500"
+                        style={{ width: `${wellbeing}%` }}
+                        aria-hidden="true"
+                      />
                     </div>
+                    <p className="mt-1 text-xs text-slate-400">
+                      Indice estimado: base 86, baja con alertas activas y sube levemente con equipos completos.
+                    </p>
                   </div>
                   <div className="md:text-right">
                     <p className="text-2xl font-semibold tracking-normal text-slate-900">{wellbeing}</p>
@@ -258,47 +266,16 @@ export default async function OrganizationPage() {
         </div>
       </section>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-5">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-lg font-semibold tracking-normal">Miembros clave</h2>
-            <p className="mt-1 text-sm text-slate-500">Usuarios cargados desde PostgreSQL</p>
-          </div>
-          <UsersRound className="h-5 w-5 text-slate-500" aria-hidden="true" />
-        </div>
-
-        <div className="mt-5 overflow-x-auto">
-          <table className="w-full min-w-[720px] border-separate border-spacing-0 text-left text-sm">
-            <thead>
-              <tr className="text-slate-500">
-                <th className="border-b border-slate-200 py-3 pr-4 font-medium">Nombre</th>
-                <th className="border-b border-slate-200 px-4 py-3 font-medium">Equipo</th>
-                <th className="border-b border-slate-200 px-4 py-3 font-medium">Rol</th>
-                <th className="border-b border-slate-200 px-4 py-3 font-medium">Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {organization.users.map((member) => (
-                <tr key={member.email}>
-                  <td className="border-b border-slate-100 py-4 pr-4">
-                    <p className="font-medium text-slate-800">{member.name}</p>
-                    <p className="mt-1 text-xs text-slate-500">{member.email}</p>
-                  </td>
-                  <td className="border-b border-slate-100 px-4 py-4 text-slate-600">
-                    {member.team?.name ?? "Sin equipo"}
-                  </td>
-                  <td className="border-b border-slate-100 px-4 py-4 text-slate-600">{getRoleLabel(member.role)}</td>
-                  <td className="border-b border-slate-100 px-4 py-4">
-                    <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
-                      {member.isActive ? "Activo" : "Inactivo"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <OrganizationMembersTable
+        members={organization.users.map((member) => ({
+          name: member.name,
+          email: member.email,
+          role: member.role,
+          roleLabel: getRoleLabel(member.role),
+          teamName: member.team?.name ?? null,
+          isActive: member.isActive,
+        }))}
+      />
 
       <section className="rounded-lg border border-slate-200 bg-white p-5">
         <div className="flex items-center justify-between gap-4">

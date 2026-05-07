@@ -8,6 +8,7 @@ import {
   BrainCircuit,
   Building2,
   CheckCircle2,
+  ClipboardList,
   LockKeyhole,
   LogOut,
   MessageSquareText,
@@ -15,11 +16,13 @@ import {
   UserCircle2,
 } from "lucide-react";
 import clsx from "clsx";
-import { canAccessPath, getRoleLabel } from "@/lib/permissions";
+import { canAccessPath, getRoleLabel, type AppRole } from "@/lib/permissions";
+import { AdvancedFilters } from "@/components/ui/advanced-filters";
 
 const navItems = [
   { href: "/dashboard", label: "Resumen", icon: Activity },
   { href: "/dashboard/alerts", label: "Alertas", icon: Bell },
+  { href: "/dashboard/cases", label: "Casos", icon: ClipboardList },
   { href: "/dashboard/messages", label: "Senales de texto", icon: MessageSquareText },
   { href: "/dashboard/organization", label: "Organizacion", icon: Building2 },
   { href: "/dashboard/privacy", label: "Privacidad", icon: ShieldCheck },
@@ -28,6 +31,7 @@ const navItems = [
 const pageTitles: Record<string, string> = {
   "/dashboard": "Resumen de bienestar",
   "/dashboard/alerts": "Alertas preventivas",
+  "/dashboard/cases": "Casos preventivos",
   "/dashboard/messages": "Analisis de mensajes",
   "/dashboard/organization": "Organizacion",
   "/dashboard/privacy": "Privacidad",
@@ -138,6 +142,7 @@ export function DashboardShell({ children, currentUser }: DashboardShellProps) {
                 <h1 className="mt-1 text-2xl font-semibold tracking-normal text-slate-950">{title}</h1>
               </div>
               <div className="flex flex-wrap items-center gap-2">
+                <AdvancedFilters userRole={currentUser.role as AppRole} />
                 <div className="flex w-fit items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">
                   <UserCircle2 className="h-4 w-4 text-blue-600" aria-hidden="true" />
                   {roleLabel}

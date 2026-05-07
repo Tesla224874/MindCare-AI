@@ -142,31 +142,66 @@ async function main() {
     }
   }
 
+  await prisma.interventionCase.deleteMany({
+    where: { organizationId: organization.id },
+  });
+
   await prisma.preventiveAlert.deleteMany({
     where: { organizationId: organization.id },
   });
 
-  await prisma.preventiveAlert.createMany({
-    data: [
-      {
-        organizationId: organization.id,
-        teamId: teams.get("Soporte")?.id,
-        openedById: savedUsers.get("ana.rivera@empresa.com")?.id,
-        title: "Sobrecarga sostenida en soporte",
-        summary: "Aumento de senales de frustracion y baja recuperacion semanal.",
-        level: "PREVENTIVE_ATTENTION",
-        recommendedAction: "Revisar carga operativa y activar seguimiento humano.",
+  const supportAlert = await prisma.preventiveAlert.create({
+    data: {
+      organizationId: organization.id,
+      teamId: teams.get("Soporte")?.id,
+      openedById: savedUsers.get("ana.rivera@empresa.com")?.id,
+      title: "Sobrecarga sostenida en soporte",
+      summary: "Aumento de senales de frustracion y baja recuperacion semanal.",
+      level: "PREVENTIVE_ATTENTION",
+      recommendedAction: "Revisar carga operativa y activar seguimiento humano.",
+    },
+  });
+
+  await prisma.preventiveAlert.create({
+    data: {
+      organizationId: organization.id,
+      teamId: teams.get("Ventas enterprise")?.id,
+      openedById: savedUsers.get("ana.rivera@empresa.com")?.id,
+      title: "Ritmo elevado de trabajo",
+      summary: "Comunicacion fuera de horario y descenso de descanso reportado.",
+      level: "OBSERVATION",
+      recommendedAction: "Conversar con liderazgo sobre prioridades y pausas.",
+    },
+  });
+
+  await prisma.interventionCase.create({
+    data: {
+      organizationId: organization.id,
+      alertId: supportAlert.id,
+      teamId: teams.get("Soporte")?.id,
+      ownerId: savedUsers.get("ana.rivera@empresa.com")?.id,
+      title: "Caso preventivo: Sobrecarga sostenida en soporte",
+      summary: "Seguimiento humano para validar contexto del equipo de soporte.",
+      objective: "Reducir sobrecarga laboral sin usar senales preventivas como medida disciplinaria.",
+      nextStep: "Agendar conversacion de apoyo y revisar distribucion de turnos.",
+      status: "ACTIVE",
+      priority: "HIGH",
+      dueAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      notes: {
+        create: {
+          authorId: savedUsers.get("ana.rivera@empresa.com")?.id,
+          body: "Caso demo creado para probar el flujo de seguimiento preventivo.",
+        },
       },
-      {
-        organizationId: organization.id,
-        teamId: teams.get("Ventas enterprise")?.id,
-        openedById: savedUsers.get("ana.rivera@empresa.com")?.id,
-        title: "Ritmo elevado de trabajo",
-        summary: "Comunicacion fuera de horario y descenso de descanso reportado.",
-        level: "OBSERVATION",
-        recommendedAction: "Conversar con liderazgo sobre prioridades y pausas.",
+      actions: {
+        create: {
+          actorId: savedUsers.get("ana.rivera@empresa.com")?.id,
+          type: "HUMAN_REVIEW",
+          description: "Revision humana inicial asignada al area de bienestar.",
+          completedAt: new Date(),
+        },
       },
-    ],
+    },
   });
 
   const author = savedUsers.get("marco.vega@empresa.com");

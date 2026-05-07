@@ -132,6 +132,7 @@ export default async function PrivacyPage() {
 
   const { consents, users, auditLogs, organization } = overview;
   const canManageConsents = currentUser.role === "ADMIN" || currentUser.role === "WELLBEING";
+  const canFilterConsents = canManageConsents;
   const consentCoverage = getConsentCoverage(consents, organization._count.users);
   const grantedCount = getGrantedCount(consents);
   const sourceEntries = Object.entries(sourceContent).map(([source, content]) => {
@@ -272,6 +273,7 @@ export default async function PrivacyPage() {
       <ConsentManager
         action={updateConsentAction}
         canManage={canManageConsents}
+        canFilter={canFilterConsents}
         users={users.map((user) => ({
           id: user.id,
           name: user.name,

@@ -99,6 +99,7 @@ export async function getDashboardOverview(scope: DashboardScope) {
         include: {
           team: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -136,6 +137,7 @@ export async function getDashboardOverview(scope: DashboardScope) {
     .slice(0, 5)
     .map(([label, count], index) => ({
       label,
+      count,
       value: totalSignalMatches ? Math.max(8, Math.round((count / totalSignalMatches) * 100)) : 0,
       color: signalColors[index] ?? "bg-slate-500",
     }));
@@ -157,6 +159,7 @@ export async function getDashboardOverview(scope: DashboardScope) {
       analysesCount: totalAnalyses,
     },
     signals,
+    totalSignalMatches,
     recentAlerts,
   };
 }

@@ -41,6 +41,36 @@ enum AlertStatus {
   DISMISSED
 }
 
+enum CaseStatus {
+  TRIAGE
+  ACTIVE
+  MONITORING
+  ESCALATED
+  CLOSED
+}
+
+enum CasePriority {
+  LOW
+  STANDARD
+  HIGH
+  URGENT
+}
+
+enum CaseActionType {
+  HUMAN_REVIEW
+  WELLBEING_CHECKIN
+  WORKLOAD_ADJUSTMENT
+  MANAGER_ALIGNMENT
+  CONSENT_REVIEW
+  EXTERNAL_REFERRAL
+  CASE_CLOSED
+}
+
+enum CaseNoteVisibility {
+  INTERNAL
+  AUDIT_ONLY
+}
+
 model Organization {
   id            String   @id @default(cuid())
   name          String
@@ -54,6 +84,7 @@ model Organization {
   users     User[]
   messages  Message[]
   alerts    PreventiveAlert[]
+  cases     InterventionCase[]
   auditLogs AuditLog[]
 }
 
@@ -65,10 +96,11 @@ model Team {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   members      User[]
   messages     Message[]
   alerts       PreventiveAlert[]
+  cases        InterventionCase[]
 
   @@unique([organizationId, name])
   @@index([organizationId])
@@ -87,13 +119,17 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  team         Team?             @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  team         Team?              @relation(fields: [teamId], references: [id], onDelete: SetNull)
   consents     Consent[]
   messages     Message[]
   analyses     MessageAnalysis[]
   auditLogs    AuditLog[]
-  alertsOpened PreventiveAlert[] @relation("AlertOpenedBy")
+  alertsOpened PreventiveAlert[]  @relation("AlertOpenedBy")
+  casesOwned   InterventionCase[] @relation("CaseOwner")
+  casesSubject InterventionCase[] @relation("CaseSubject")
+  caseNotes    CaseNote[]
+  caseActions  CaseAction[]
 
   @@index([organizationId])
   @@index([teamId])
@@ -170,13 +206,80 @@ model PreventiveAlert {
   createdAt         DateTime    @default(now())
   resolvedAt        DateTime?
 
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  team         Team?        @relation(fields: [teamId], references: [id], onDelete: SetNull)
-  openedBy     User?        @relation("AlertOpenedBy", fields: [openedById], references: [id], onDelete: SetNull)
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  team         Team?             @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  openedBy     User?             @relation("AlertOpenedBy", fields: [openedById], references: [id], onDelete: SetNull)
+  case         InterventionCase?
 
   @@index([organizationId, status])
   @@index([teamId, status])
   @@index([level])
+}
+
+model InterventionCase {
+  id             String       @id @default(cuid())
+  organizationId String
+  alertId        String?      @unique
+  teamId         String?
+  subjectUserId  String?
+  ownerId        String?
+  title          String
+  summary        String
+  objective      String
+  nextStep       String
+  status         CaseStatus   @default(TRIAGE)
+  priority       CasePriority @default(STANDARD)
+  dueAt          DateTime?
+  closedAt       DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  alert        PreventiveAlert? @relation(fields: [alertId], references: [id], onDelete: SetNull)
+  team         Team?            @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  subjectUser  User?            @relation("CaseSubject", fields: [subjectUserId], references: [id], onDelete: SetNull)
+  owner        User?            @relation("CaseOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  notes        CaseNote[]
+  actions      CaseAction[]
+
+  @@index([organizationId, status])
+  @@index([teamId, status])
+  @@index([ownerId, status])
+  @@index([priority])
+  @@index([dueAt])
+}
+
+model CaseNote {
+  id         String             @id @default(cuid())
+  caseId     String
+  authorId   String?
+  body       String
+  visibility CaseNoteVisibility @default(INTERNAL)
+  createdAt  DateTime           @default(now())
+
+  case   InterventionCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  author User?            @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([caseId, createdAt])
+  @@index([authorId, createdAt])
+}
+
+model CaseAction {
+  id          String         @id @default(cuid())
+  caseId      String
+  actorId     String?
+  type        CaseActionType
+  description String
+  metadata    Json?
+  completedAt DateTime?
+  createdAt   DateTime       @default(now())
+
+  case  InterventionCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  actor User?            @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([caseId, createdAt])
+  @@index([actorId, createdAt])
+  @@index([type])
 }
 
 model AuditLog {
