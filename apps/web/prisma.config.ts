@@ -1,7 +1,11 @@
 import process from "node:process";
 import { defineConfig, env } from "prisma/config";
 
-process.loadEnvFile(".env");
+try {
+  process.loadEnvFile(".env");
+} catch {
+  // CI and production providers inject environment variables directly.
+}
 
 const databasePrismaPath = "../../packages/database/prisma";
 

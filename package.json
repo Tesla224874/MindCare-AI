@@ -16,7 +16,7 @@
     "web:start": "npm --prefix apps/web run start",
     "test": "npm run packages:build && npm --prefix apps/web test",
     "lint": "npm --prefix apps/web run lint",
-    "typecheck": "npm run packages:build && npm --prefix apps/web run typecheck",
+    "typecheck": "npm run packages:build && npm run db:generate && npm --prefix apps/web run typecheck",
     "prod:check": "npm --prefix apps/web run prod:check",
     "db:init": "npm --prefix apps/web run db:init",
     "db:generate": "npm --prefix apps/web run db:generate",
