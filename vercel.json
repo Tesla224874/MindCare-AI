@@ -1,9 +1,9 @@
 {
-  "buildCommand": "npm run web:build",
-  "devCommand": "npm run web:dev",
-  "installCommand": "npm ci --include=optional",
+  "buildCommand": "cd ../.. && npm run web:build",
+  "devCommand": "cd ../.. && npm run web:dev",
+  "installCommand": "cd ../.. && npm ci --include=optional",
   "framework": "nextjs",
-  "outputDirectory": "apps/web/.next",
+  "outputDirectory": ".next",
   "git": {
     "deploymentEnabled": {
       "main": true
