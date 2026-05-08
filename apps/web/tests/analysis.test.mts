@@ -28,3 +28,21 @@ test("escalates high risk language", async () => {
   assert.ok(analysis.score >= 70);
   assert.ok(analysis.signals.some((signal) => signal.id === "hopelessness"));
 });
+
+test("escalates suicidal ideation as high risk", async () => {
+  const analysis = await rulesAnalysisEngine.analyze("Estoy mal, ayudame, quiero suicidarme.");
+
+  assert.equal(analysis.level, "Riesgo alto");
+  assert.ok(analysis.score >= 80);
+  assert.ok(analysis.signals.some((signal) => signal.id === "self_harm_crisis"));
+});
+
+test("escalates self-harm language as high risk", async () => {
+  const analysis = await rulesAnalysisEngine.analyze(
+    "No duermo mucho, duermo 4 horas diarias, tengo tendencias para autolesionarme.",
+  );
+
+  assert.equal(analysis.level, "Riesgo alto");
+  assert.equal(analysis.score, 100);
+  assert.ok(analysis.signals.some((signal) => signal.id === "self_harm_crisis"));
+});

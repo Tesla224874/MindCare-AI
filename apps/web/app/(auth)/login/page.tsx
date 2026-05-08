@@ -1,4 +1,4 @@
-import { BrainCircuit } from "lucide-react";
+import Image from "next/image";
 import { loginAction } from "./actions";
 import { DEMO_EMAIL, DEMO_PASSWORD } from "@/lib/auth";
 
@@ -20,11 +20,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <main className="min-h-screen bg-linear-to-br from-slate-900 via-blue-950 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-500 mb-4">
-            <BrainCircuit className="h-8 w-8 text-white" aria-hidden="true" />
-          </div>
-          <h1 className="text-3xl font-bold text-white">MindCare.AI</h1>
-          <p className="text-blue-300 mt-1">Plataforma de bienestar organizacional</p>
+          <Image
+            className="mx-auto h-40 w-auto"
+            src="/images/mindcare-logo.svg"
+            alt="MindCare.AI - Bienestar organizacional inteligente"
+            width={320}
+            height={180}
+            priority
+          />
         </div>
 
         <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">

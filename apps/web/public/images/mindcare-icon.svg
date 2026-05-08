@@ -1,0 +1,23 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mindcareStroke" x1="67" y1="43" x2="190" y2="211" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="0.48" stop-color="#0ea5e9"/>
+      <stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="softShadow" x="35" y="27" width="186" height="202" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="#ffffff"/>
+  <g filter="url(#softShadow)">
+    <path d="M107 51c-17 0-31 14-31 31v2c-16 3-28 17-28 34 0 11 5 21 13 27-4 6-6 12-6 20 0 20 16 36 36 36 9 0 17-3 24-9 7 6 15 9 24 9 20 0 36-16 36-36 0-7-2-14-6-20 8-6 13-16 13-27 0-17-12-31-28-34v-2c0-17-14-31-31-31-6 0-12 2-16 5-5-3-10-5-16-5Z" stroke="url(#mindcareStroke)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M115 62v59" stroke="url(#mindcareStroke)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M115 182v-46" stroke="url(#mindcareStroke)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M98 105c0-12 14-18 23-9l7 7 7-7c9-9 23-3 23 9 0 22-30 37-30 37s-30-15-30-37Z" stroke="url(#mindcareStroke)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="83" cy="116" r="7" fill="url(#mindcareStroke)"/>
+    <circle cx="172" cy="130" r="7" fill="url(#mindcareStroke)"/>
+    <circle cx="148" cy="78" r="7" fill="url(#mindcareStroke)"/>
+    <circle cx="148" cy="174" r="7" fill="url(#mindcareStroke)"/>
+  </g>
+</svg>

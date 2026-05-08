@@ -1,0 +1,27 @@
+<svg width="640" height="360" viewBox="0 0 640 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mindcareStroke" x1="244" y1="43" x2="397" y2="227" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="0.5" stop-color="#0ea5e9"/>
+      <stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="wordShadow" x="95" y="213" width="450" height="58" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="2" stdDeviation="1" flood-color="#64748b" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <rect width="640" height="360" fill="#ffffff"/>
+  <g transform="translate(192 20)">
+    <path d="M107 31c-17 0-31 14-31 31v2c-16 3-28 17-28 34 0 11 5 21 13 27-4 6-6 12-6 20 0 20 16 36 36 36 9 0 17-3 24-9 7 6 15 9 24 9 20 0 36-16 36-36 0-7-2-14-6-20 8-6 13-16 13-27 0-17-12-31-28-34v-2c0-17-14-31-31-31-6 0-12 2-16 5-5-3-10-5-16-5Z" stroke="url(#mindcareStroke)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M115 42v59" stroke="url(#mindcareStroke)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M115 162v-46" stroke="url(#mindcareStroke)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M98 85c0-12 14-18 23-9l7 7 7-7c9-9 23-3 23 9 0 22-30 37-30 37s-30-15-30-37Z" stroke="url(#mindcareStroke)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="83" cy="96" r="7" fill="url(#mindcareStroke)"/>
+    <circle cx="172" cy="110" r="7" fill="url(#mindcareStroke)"/>
+    <circle cx="148" cy="58" r="7" fill="url(#mindcareStroke)"/>
+    <circle cx="148" cy="154" r="7" fill="url(#mindcareStroke)"/>
+  </g>
+  <g filter="url(#wordShadow)">
+    <text x="320" y="257" text-anchor="middle" font-family="Segoe UI, Arial, Helvetica, sans-serif" font-size="52" font-weight="800" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2">MindCare.AI</text>
+  </g>
+  <text x="320" y="286" text-anchor="middle" font-family="Segoe UI, Arial, Helvetica, sans-serif" font-size="18" font-weight="500" fill="#2f6f7b">Bienestar organizacional inteligente</text>
+</svg>

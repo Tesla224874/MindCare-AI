@@ -1,11 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Activity,
   Bell,
-  BrainCircuit,
+  Bot,
   Building2,
   CheckCircle2,
   ClipboardList,
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/dashboard", label: "Resumen", icon: Activity },
   { href: "/dashboard/alerts", label: "Alertas", icon: Bell },
   { href: "/dashboard/cases", label: "Casos", icon: ClipboardList },
+  { href: "/dashboard/chat", label: "Chat preventivo", icon: Bot },
   { href: "/dashboard/messages", label: "Senales de texto", icon: MessageSquareText },
   { href: "/dashboard/organization", label: "Organizacion", icon: Building2 },
   { href: "/dashboard/privacy", label: "Privacidad", icon: ShieldCheck },
@@ -32,6 +34,7 @@ const pageTitles: Record<string, string> = {
   "/dashboard": "Resumen de bienestar",
   "/dashboard/alerts": "Alertas preventivas",
   "/dashboard/cases": "Casos preventivos",
+  "/dashboard/chat": "Chat preventivo",
   "/dashboard/messages": "Analisis de mensajes",
   "/dashboard/organization": "Organizacion",
   "/dashboard/privacy": "Privacidad",
@@ -66,9 +69,14 @@ export function DashboardShell({ children, currentUser }: DashboardShellProps) {
       <div className="flex min-h-screen">
         <aside className="hidden w-72 shrink-0 border-r border-slate-200 bg-white px-5 py-6 lg:block">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-blue-600 text-white">
-              <BrainCircuit className="h-6 w-6" aria-hidden="true" />
-            </div>
+            <Image
+              className="rounded-lg"
+              src="/images/mindcare-icon.svg"
+              alt=""
+              width={48}
+              height={48}
+              priority
+            />
             <div>
               <p className="text-lg font-semibold">MindCare.AI</p>
               <p className="text-xs text-slate-500">Panel organizacional</p>

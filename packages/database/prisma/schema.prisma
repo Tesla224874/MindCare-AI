@@ -71,6 +71,11 @@ enum CaseNoteVisibility {
   AUDIT_ONLY
 }
 
+enum ChatMessageRole {
+  USER
+  ASSISTANT
+}
+
 model Organization {
   id            String   @id @default(cuid())
   name          String
@@ -85,6 +90,7 @@ model Organization {
   messages  Message[]
   alerts    PreventiveAlert[]
   cases     InterventionCase[]
+  chats     ChatSession[]
   auditLogs AuditLog[]
 }
 
@@ -101,6 +107,7 @@ model Team {
   messages     Message[]
   alerts       PreventiveAlert[]
   cases        InterventionCase[]
+  chats        ChatSession[]
 
   @@unique([organizationId, name])
   @@index([organizationId])
@@ -130,6 +137,8 @@ model User {
   casesSubject InterventionCase[] @relation("CaseSubject")
   caseNotes    CaseNote[]
   caseActions  CaseAction[]
+  chatSessions ChatSession[]
+  chatMessages ChatMessage[]
 
   @@index([organizationId])
   @@index([teamId])
@@ -210,6 +219,7 @@ model PreventiveAlert {
   team         Team?             @relation(fields: [teamId], references: [id], onDelete: SetNull)
   openedBy     User?             @relation("AlertOpenedBy", fields: [openedById], references: [id], onDelete: SetNull)
   case         InterventionCase?
+  chatAnalyses ChatAnalysis[]
 
   @@index([organizationId, status])
   @@index([teamId, status])
@@ -280,6 +290,64 @@ model CaseAction {
   @@index([caseId, createdAt])
   @@index([actorId, createdAt])
   @@index([type])
+}
+
+model ChatSession {
+  id             String   @id @default(cuid())
+  organizationId String
+  teamId         String?
+  userId         String
+  title          String
+  status         String   @default("ACTIVE")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  team         Team?         @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages     ChatMessage[]
+
+  @@index([organizationId, updatedAt])
+  @@index([teamId, updatedAt])
+  @@index([userId, updatedAt])
+  @@index([userId, status, updatedAt])
+}
+
+model ChatMessage {
+  id              String          @id @default(cuid())
+  sessionId       String
+  authorId        String?
+  role            ChatMessageRole
+  contentHash     String
+  redactedPreview String
+  createdAt       DateTime        @default(now())
+
+  session  ChatSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  author   User?         @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  analysis ChatAnalysis?
+
+  @@index([sessionId, createdAt])
+  @@index([authorId, createdAt])
+  @@index([role])
+}
+
+model ChatAnalysis {
+  id         String    @id @default(cuid())
+  messageId  String    @unique
+  alertId    String?
+  score      Int
+  level      RiskLevel
+  confidence Int
+  signals    Json
+  modelName  String    @default("rules-mvp")
+  createdAt  DateTime  @default(now())
+
+  message ChatMessage      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  alert   PreventiveAlert? @relation(fields: [alertId], references: [id], onDelete: SetNull)
+
+  @@index([level])
+  @@index([createdAt])
+  @@index([alertId])
 }
 
 model AuditLog {

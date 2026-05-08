@@ -13,6 +13,27 @@ const MODEL_NAME = "rules-mvp";
 
 const rules: Rule[] = [
   {
+    id: "self_harm_crisis",
+    label: "Ideacion suicida o autolesion",
+    terms: [
+      "suicid",
+      "autolesion",
+      "auto lesion",
+      "hacerme daño",
+      "matarme",
+      "quitarme la vida",
+      "acabar con mi vida",
+      "no quiero vivir",
+      "hacerme dano",
+      "lastimarme",
+      "desaparecer para siempre",
+    ],
+    weight: 85,
+    recommendation:
+      "Activar apoyo humano inmediato. Si hay riesgo actual, contactar servicios de emergencia locales o una persona de confianza ahora.",
+    kind: "risk",
+  },
+  {
     id: "overload",
     label: "Sobrecarga y estres",
     terms: [
@@ -98,6 +119,14 @@ function getLevel(score: number): AnalysisLevel {
   return "Bajo";
 }
 
+function getSignalScore(signal: { id: string; score: number }) {
+  if (signal.id === "self_harm_crisis" && signal.score > 0) {
+    return 100;
+  }
+
+  return signal.score;
+}
+
 export const rulesAnalysisEngine: AnalysisEngine = {
   name: MODEL_NAME,
   analyze(message) {
@@ -120,7 +149,7 @@ export const rulesAnalysisEngine: AnalysisEngine = {
       .filter((signal) => signal.matches.length > 0);
 
     const totalMatches = signals.reduce((total, signal) => total + signal.matches.length, 0);
-    const rawScore = signals.reduce((total, signal) => total + signal.score, 0);
+    const rawScore = signals.reduce((total, signal) => total + getSignalScore(signal), 0);
     const lengthAdjustment = words.length > 24 ? 6 : 0;
     const score = message.trim() ? clamp(rawScore + lengthAdjustment, 0, 100) : 0;
     const confidence = message.trim() ? clamp(35 + words.length * 2 + totalMatches * 8, 35, 96) : 0;

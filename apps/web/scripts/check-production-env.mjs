@@ -44,4 +44,16 @@ if (engine === "ai" && !process.env.ANALYSIS_AI_ENDPOINT) {
   process.exit(1);
 }
 
+const chatEngine = process.env.CHAT_ENGINE ?? "local";
+
+if (!["local", "ai"].includes(chatEngine)) {
+  console.error('CHAT_ENGINE must be "local" or "ai".');
+  process.exit(1);
+}
+
+if (chatEngine === "ai" && !process.env.CHAT_AI_ENDPOINT) {
+  console.error('CHAT_AI_ENDPOINT is required when CHAT_ENGINE="ai".');
+  process.exit(1);
+}
+
 console.log("Production environment check passed.");

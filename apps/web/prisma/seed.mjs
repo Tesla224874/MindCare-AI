@@ -91,6 +91,13 @@ async function main() {
       team: "Auditoria",
       password: "MindCareLucia2026",
     },
+    {
+      email: "sofia.mendez@empresa.com",
+      name: "Sofia Mendez",
+      role: "EMPLOYEE",
+      team: "Producto",
+      password: "MindCareSofia2026",
+    },
   ];
 
   const savedUsers = new Map();
@@ -143,6 +150,10 @@ async function main() {
   }
 
   await prisma.interventionCase.deleteMany({
+    where: { organizationId: organization.id },
+  });
+
+  await prisma.chatSession.deleteMany({
     where: { organizationId: organization.id },
   });
 
